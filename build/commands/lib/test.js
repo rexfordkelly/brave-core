@@ -85,7 +85,7 @@ const test = (passthroughArgs, suite, buildConfig = config.defaultBuildConfig, o
     util.run(path.join(config.outputDir, "iossim"), [
       path.join(config.outputDir, `${suite}.app`),
       path.join(config.outputDir, `${suite}.app/PlugIns/${suite}_module.xctest`)
-    ], config.defaultOptions)
+    ], options)
   } else {
     // Run the tests
     getTestsToRun(config, suite).forEach((testSuite) => {
