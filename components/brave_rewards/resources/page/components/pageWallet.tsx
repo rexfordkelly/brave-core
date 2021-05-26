@@ -363,7 +363,7 @@ class PageWallet extends React.Component<Props, State> {
   onVerifyClick = () => {
     const { externalWallet } = this.props.rewardsData
 
-    if (!externalWallet || !externalWallet.verifyUrl) {
+    if (!externalWallet || !externalWallet.loginUrl) {
       this.actions.getExternalWallet()
       return
     }
@@ -423,7 +423,7 @@ class PageWallet extends React.Component<Props, State> {
       }
     }
 
-    if (externalWallet.verifyUrl) {
+    if (externalWallet.loginUrl) {
       this.handleExternalWalletLink()
       return
     }
@@ -855,8 +855,7 @@ class PageWallet extends React.Component<Props, State> {
           this.state.modalVerify
             ? <ConnectWalletModal
                 rewardsBalance={balance.total}
-                defaultProvider={walletType || ''}
-                providers={externalWalletProviderList}
+                providers={[{ type: walletType || '', name: walletProvider }]}
                 onContinue={this.onConnectWalletContinue}
                 onClose={this.toggleVerifyModal}
             />
