@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.chromium.base.CommandLine;
 import org.chromium.base.Log;
@@ -30,6 +29,7 @@ import org.chromium.chrome.R;
 import org.chromium.chrome.browser.BraveRewardsHelper;
 import org.chromium.chrome.browser.app.BraveActivity;
 import org.chromium.chrome.browser.customtabs.CustomTabActivity;
+import org.chromium.chrome.browser.init.AsyncInitializationActivity;
 import org.chromium.chrome.browser.night_mode.GlobalNightModeStateProviderHolder;
 import org.chromium.chrome.browser.onboarding.OnboardingPrefManager;
 import org.chromium.chrome.browser.preferences.BravePrefServiceBridge;
@@ -54,8 +54,7 @@ public class P3aOnboardingActivity extends FirstRunActivityBase {
         CheckBox p3aOnboardingCheckbox = findViewById(R.id.p3a_onboarding_checkbox);
         boolean isP3aEnabled = true;
         try {
-            isP3aEnabled = SharedPreferencesManager.getInstance().readBoolean(
-                    BravePreferenceKeys.BRAVE_P3A_ENABLED, false);
+            isP3aEnabled = BravePrefServiceBridge.getInstance().getP3AEnabled();
         } catch (Exception e) {
             Log.e("P3aOnboarding", e.getMessage());
         }
@@ -65,7 +64,7 @@ public class P3aOnboardingActivity extends FirstRunActivityBase {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         try {
-                            SharedPreferencesManager.getInstance().writeBoolean(BravePreferenceKeys.BRAVE_P3A_ENABLED, isChecked);
+                            BravePrefServiceBridge.getInstance().setP3AEnabled(isChecked);
                             BravePrefServiceBridge.getInstance().setP3ANoticeAcknowledged(true);
                         } catch (Exception e) {
                             Log.e("P3aOnboarding", e.getMessage());
@@ -73,15 +72,11 @@ public class P3aOnboardingActivity extends FirstRunActivityBase {
                     }
                 });
         ImageView p3aOnboardingImg = findViewById(R.id.p3a_onboarding_img);
-        // Remove the condition when https://github.com/brave/brave-browser/issues/16244 is resolved
-        if (!CommandLine.isInitialized())
-            p3aOnboardingImg.setImageResource(R.drawable.ic_brave_logo);
-        else
-            p3aOnboardingImg.setImageResource(isFirstInstall
-                            ? R.drawable.ic_brave_logo
-                            : (GlobalNightModeStateProviderHolder.getInstance().isInNightMode()
-                                            ? R.drawable.ic_spot_graphic_dark
-                                            : R.drawable.ic_spot_graphic));
+        p3aOnboardingImg.setImageResource(isFirstInstall
+                        ? R.drawable.ic_brave_logo
+                        : (GlobalNightModeStateProviderHolder.getInstance().isInNightMode()
+                                        ? R.drawable.ic_spot_graphic_dark
+                                        : R.drawable.ic_spot_graphic));
         TextView p3aOnboardingText = findViewById(R.id.p3a_onboarding_text);
         mBtnContinue = findViewById(R.id.btn_continue);
         mBtnContinue.setOnClickListener(new View.OnClickListener() {
