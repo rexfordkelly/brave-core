@@ -855,7 +855,7 @@ class PageWallet extends React.Component<Props, State> {
           this.state.modalVerify
             ? <ConnectWalletModal
                 rewardsBalance={balance.total}
-                providers={[{ type: walletType || '', name: walletProvider }]}
+                providers={externalWalletProviderList}
                 onContinue={this.onConnectWalletContinue}
                 onClose={this.toggleVerifyModal}
             />
