@@ -16,7 +16,6 @@ import { RewardsOptInModal, RewardsTourModal } from '../../../shared/components/
 // Utils
 import * as rewardsPanelActions from '../actions/rewards_panel_actions'
 import * as utils from '../utils'
-import { upholdMinimumBalance } from '../../../shared/lib/uphold'
 
 import * as style from './panel.style'
 
@@ -27,6 +26,7 @@ interface Props extends RewardsExtension.ComponentProps {
 }
 
 interface State {
+  stage: string
   showSummary: boolean
   showRewardsTour: boolean
   firstTimeSetup: boolean
@@ -42,6 +42,7 @@ export class Panel extends React.Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
+      stage: "wallet",
       showSummary: true,
       showRewardsTour: false,
       firstTimeSetup: false,
@@ -298,7 +299,7 @@ export class Panel extends React.Component<Props, State> {
       return
     }
 
-    utils.handleExternalWalletLink(balance, externalWallet)
+    utils.handleExternalWalletLink(this.props.actions, balance, externalWallet)
   }
 
   showTipSiteDetail = (entryPoint: RewardsExtension.TipDialogEntryPoint) => {
@@ -676,19 +677,6 @@ export class Panel extends React.Component<Props, State> {
     return utils.getPromotion(currentPromotion[0])
   }
 
-  showLoginMessage = () => {
-    const { balance, externalWallet } = this.props.rewardsPanelData
-    const walletStatus = utils.getWalletStatus(externalWallet)
-    const walletType = externalWallet ? externalWallet.type : ''
-
-    return (
-      (!walletStatus || walletStatus === 'unverified') &&
-      walletType === 'uphold' &&
-      balance &&
-      balance.total < upholdMinimumBalance
-    )
-  }
-
   showOnboarding () {
     const {
       balance,
@@ -728,7 +716,7 @@ export class Panel extends React.Component<Props, State> {
       }
 
       const onVerifyClick = () => {
-        utils.handleExternalWalletLink(balance, externalWallet)
+        utils.handleExternalWalletLink(this.props.actions, balance, externalWallet)
       }
 
       return (
@@ -782,6 +770,12 @@ export class Panel extends React.Component<Props, State> {
     )
   }
 
+  onVerifyClick = () => {
+    chrome.tabs.create({
+        url: 'brave://rewards/#verify'
+    })
+  }
+
   render () {
     const { pendingContributionTotal, enabledAC, externalWallet, balance, parameters } = this.props.rewardsPanelData
     const publisher: RewardsExtension.Publisher | undefined = this.getPublisher()
@@ -808,7 +802,6 @@ export class Panel extends React.Component<Props, State> {
     let currentPromotion = this.getCurrentPromotion()
 
     const walletStatus = utils.getWalletStatus(externalWallet)
-    const onVerifyClick = utils.handleExternalWalletLink.bind(this, balance, externalWallet)
 
     return (
       <WalletWrapper
@@ -829,11 +822,10 @@ export class Panel extends React.Component<Props, State> {
         walletType={externalWallet ? externalWallet.type : undefined}
         walletState={walletStatus}
         walletProvider={utils.getWalletProviderName(externalWallet)}
-        onVerifyClick={onVerifyClick}
+        onVerifyClick={this.onVerifyClick}
         onDisconnectClick={this.onDisconnectClick}
         goToExternalWallet={this.goToExternalWallet}
         greetings={utils.getGreetings(externalWallet)}
-        showLoginMessage={this.showLoginMessage()}
         {...notification}
       >
         <WalletSummarySlider

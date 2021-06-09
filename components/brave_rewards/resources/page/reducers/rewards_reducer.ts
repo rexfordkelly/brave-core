@@ -281,16 +281,6 @@ const rewardsReducer: Reducer<Rewards.State | undefined> = (state: Rewards.State
 
       break
     }
-    case types.ON_VERIFY_ONBOARDING_DISPLAYED: {
-      let ui = state.ui
-
-      ui.verifyOnboardingDisplayed = true
-      state = {
-        ...state,
-        ui
-      }
-      break
-    }
     case types.PROCESS_REWARDS_PAGE_URL: {
       const path = action.payload.path
       const query = action.payload.query
@@ -341,7 +331,7 @@ const rewardsReducer: Reducer<Rewards.State | undefined> = (state: Rewards.State
         break
       }
 
-      if (data.walletType === 'uphold' || data.walletType === 'bitflyer') {
+      if (data.walletType === 'uphold' || data.walletType === 'bitflyer' || data.walletType === 'gemini') {
         chrome.send('brave_rewards.fetchBalance')
 
         if (data.action === 'authorization') {

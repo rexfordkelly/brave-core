@@ -37,10 +37,7 @@ import {
   StyledVerifiedButtonIcon,
   StyledVerifiedButtonText,
   StyledDialogList,
-  StyledLink,
-  LoginMessage,
-  LoginMessageButtons,
-  LoginMessageText
+  StyledLink
 } from './style'
 import { getLocale } from 'brave-ui/helpers'
 import { GrantCaptcha, GrantComplete, GrantError, GrantWrapper, WalletPopup } from '../'
@@ -56,7 +53,7 @@ import {
 } from 'brave-ui/components/icons'
 
 import { BitflyerIcon } from '../../../shared/components/icons/bitflyer_icon'
-import { upholdMinimumBalance } from '../../../shared/lib/uphold'
+import { GeminiIcon } from '../../../shared/components/icons/gemini_icon'
 
 import giftIconUrl from './assets/gift.svg'
 import loveIconUrl from './assets/love.svg'
@@ -148,28 +145,25 @@ export interface Props {
   onDisconnectClick?: () => void
   goToExternalWallet?: () => void
   greetings?: string
-  showLoginMessage?: boolean
 }
 
 export type Step = '' | 'captcha' | 'complete'
 
 interface State {
   verificationDetails: boolean
-  showLoginMessage: boolean
 }
 
 export default class WalletWrapper extends React.PureComponent<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      verificationDetails: false,
-      showLoginMessage: false
+      verificationDetails: false
     }
   }
 
   generateActions (actions: ActionWallet[], id?: string) {
     return actions && actions.map((action, i: number) => {
-      let clickAction = action.externalWallet ? this.onActionClick.bind(this, action.action) : action.action
+      let clickAction = action.externalWallet ? this.onActionClick.bind(this, this.props.onVerifyClick) : action.action
       return (
         <StyledAction key={`${id}-${i}`} onClick={clickAction} data-test-id={action.testId}>
           <StyledActionIcon>{action.icon}</StyledActionIcon>
@@ -184,14 +178,7 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
       return
     }
 
-    if (!this.props.showLoginMessage) {
-      action()
-      return
-    }
-
-    this.setState({
-      showLoginMessage: true
-    })
+    action()
   }
 
   onNotificationClick = () => {
@@ -337,6 +324,7 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
     const walletProviderIcon =
       walletType === 'uphold' ? <UpholdSystemIcon /> :
       walletType === 'bitflyer' ? <BitflyerIcon white={true} /> :
+      walletType === 'gemini' ? <GeminiIcon /> :
       null
 
     const buttonProps: Partial<ButtonProps> = {
@@ -543,12 +531,6 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
     )
   }
 
-  toggleLoginMessage = () => {
-    this.setState({
-      showLoginMessage: false
-    })
-  }
-
   render () {
     const {
       id,
@@ -620,6 +602,7 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
 
     const walletIcon =
       walletType === 'uphold' ? <UpholdColorIcon /> :
+      walletType === 'gemini' ? <GeminiIcon /> :
       null
 
     return (
@@ -684,39 +667,6 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
                 : this.generateNotification(notification)
             }
             <StyledCurve background={gradientTop} />
-            {
-              this.state.showLoginMessage
-              ? <LoginMessage>
-                  <LoginMessageText>
-                    <b>{getLocale('loginMessageTitle')}</b>
-                    <p>
-                      {
-                        getLocale('loginMessageText')
-                          .replace('$1', String(upholdMinimumBalance))
-                      }
-                    </p>
-                    <br/>
-                    {getLocale('walletVerificationNote3').replace('$1', walletProvider)}
-                  </LoginMessageText>
-                  <LoginMessageButtons>
-                    <Button
-                      level={'secondary'}
-                      type={'accent'}
-                      text={getLocale('cancel')}
-                      onClick={this.toggleLoginMessage}
-                      id={'cancel-login-button'}
-                    />
-                    <Button
-                      level={'primary'}
-                      type={'accent'}
-                      text={getLocale('login')}
-                      onClick={this.props.onVerifyClick}
-                      id={'login-button'}
-                    />
-                  </LoginMessageButtons>
-              </LoginMessage>
-              : null
-            }
           </StyledHeader>
           <StyledContent
             contentPadding={contentPadding}

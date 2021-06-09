@@ -272,7 +272,6 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "editCardsTitle", IDS_EDIT_CARDS_TITLE },
         { "tosAndPp", IDS_REWARDS_WIDGET_TOS_AND_PP},     // NOLINT
         { "rewardsWidgetStartUsing", IDS_REWARDS_WIDGET_START_USING},     // NOLINT
-        { "pendingRewardsMessage", IDS_BRAVE_REWARDS_PENDING_REWARDS_MESSAGE },
         // Together Widget
         { "togetherWidgetTitle", IDS_TOGETHER_WIDGET_TITLE },
         { "togetherWidgetWelcomeTitle", IDS_TOGETHER_WIDGET_WELCOME_TITLE },
@@ -721,7 +720,6 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "optOutTooltip", IDS_BRAVE_UI_ADS_OPT_OUT_TOOLTIP },
         { "payment", IDS_BRAVE_UI_PAYMENT },
         { "paymentNotMade", IDS_BRAVE_UI_PAYMENT_NOT_MADE },
-        { "pendingRewardsMessage", IDS_BRAVE_REWARDS_PENDING_REWARDS_MESSAGE },
         { "pendingContributions", IDS_BRAVE_UI_PENDING_CONTRIBUTIONS },
         { "pendingContributionEmpty", IDS_BRAVE_UI_PENDING_CONTRIBUTION_EMPTY },
         { "pendingContributionRemoveAll", IDS_BRAVE_UI_PENDING_CONTRIBUTION_REMOVE_ALL },        // NOLINT
@@ -831,23 +829,18 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "walletActivity", IDS_BRAVE_UI_WALLET_ACTIVITY },
         { "walletAddress", IDS_BRAVE_UI_WALLET_ADDRESS },
         { "walletBalance", IDS_BRAVE_UI_WALLET_BALANCE },
+        { "walletConnectButtonText", IDS_BRAVE_UI_WALLET_CONNECT_BUTTON_TEXT },
+        { "walletConnectMessage", IDS_BRAVE_UI_WALLET_CONNECT_MESSAGE },
+        { "walletConnectNote", IDS_BRAVE_UI_WALLET_CONNECT_NOTE },
+        { "walletConnectReconnectLink", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_LINK },  // NOLINT
+        { "walletConnectReconnectText", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_TEXT },  // NOLINT
+        { "walletConnectTitle", IDS_BRAVE_UI_WALLET_CONNECT_TITLE },
         { "walletButtonDisconnected", IDS_BRAVE_UI_WALLET_BUTTON_DISCONNECTED },
         { "walletButtonUnverified", IDS_BRAVE_UI_WALLET_BUTTON_UNVERIFIED },
         { "walletButtonVerified", IDS_BRAVE_UI_WALLET_BUTTON_VERIFIED },
         { "walletGoToProvider", IDS_BRAVE_UI_WALLET_GO_TO_PROVIDER },
         { "walletGoToVerifyPage", IDS_BRAVE_UI_WALLET_GO_TO_VERIFY_PAGE },
         { "walletDisconnect", IDS_BRAVE_UI_WALLET_DISCONNECT },
-        { "walletVerificationButton", IDS_BRAVE_UI_WALLET_VERIFICATION_BUTTON },
-        { "walletVerificationFooter", IDS_BRAVE_UI_WALLET_VERIFICATION_FOOTER },
-        { "walletVerificationID", IDS_BRAVE_UI_WALLET_VERIFICATION_ID },
-        { "walletVerificationList1", IDS_BRAVE_UI_WALLET_VERIFICATION_LIST1 },
-        { "walletVerificationList2", IDS_BRAVE_UI_WALLET_VERIFICATION_LIST2 },
-        { "walletVerificationList3", IDS_BRAVE_UI_WALLET_VERIFICATION_LIST3 },
-        { "walletVerificationListHeader", IDS_BRAVE_UI_WALLET_VERIFICATION_HEADER },  // NOLINT
-        { "walletVerificationNote1", IDS_BRAVE_UI_WALLET_VERIFICATION_NOTE1 },
-        { "walletVerificationNote2", IDS_BRAVE_UI_WALLET_VERIFICATION_NOTE2 },
-        { "walletVerificationNote3", IDS_BRAVE_UI_WALLET_VERIFICATION_NOTE3 },
-        { "walletVerificationTitle1", IDS_BRAVE_UI_WALLET_VERIFICATION_TITLE1 },
         { "walletConnected", IDS_BRAVE_UI_WALLET_CONNECTED },
         { "walletPending", IDS_BRAVE_UI_WALLET_PENDING },
         { "walletVerified", IDS_BRAVE_UI_WALLET_VERIFIED },
@@ -888,6 +881,17 @@ void CustomizeWebUIHTMLSource(const std::string &name,
 
         { "upholdPromoEquitiesTitle",IDS_BRAVE_UI_UPHOLD_PROMO_EQUITIES_TITLE },                 // NOLINT
         { "upholdPromoEquitiesInfo", IDS_BRAVE_UI_UPHOLD_PROMO_EQUITIES_INFO },
+        { "alreadyConnected", IDS_BRAVE_REWARDS_ALREADY_CONNECTED },
+        { "connectWalletChooseHeader", IDS_BRAVE_REWARDS_CONNECT_WALLET_CHOOSE_HEADER },  // NOLINT
+        { "connectWalletChooseText", IDS_BRAVE_REWARDS_CONNECT_WALLET_CHOOSE_TEXT },  // NOLINT
+        { "connectWalletInfoHeader", IDS_BRAVE_REWARDS_CONNECT_WALLET_INFO_HEADER },  // NOLINT
+        { "connectWalletInfoNote", IDS_BRAVE_REWARDS_CONNECT_WALLET_INFO_NOTE },
+        { "connectWalletInfoText", IDS_BRAVE_REWARDS_CONNECT_WALLET_INFO_TEXT },
+        { "connectWalletTermsLabel", IDS_BRAVE_REWARDS_CONNECT_WALLET_TERMS_LABEL },  // NOLINT
+        { "continue", IDS_BRAVE_REWARDS_CONTINUE },
+        { "continueToLogin", IDS_BRAVE_REWARDS_CONTINUE_TO_LOGIN },
+        { "minimumBalanceWarning", IDS_BRAVE_REWARDS_MINIMUM_BALANCE_WARNING },
+        { "reconnectWallet", IDS_BRAVE_REWARDS_RECONNECT_WALLET },
       }
     }, {
       std::string("adblock"), {
