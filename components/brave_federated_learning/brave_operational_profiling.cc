@@ -15,6 +15,8 @@
 #include "base/timer/timer.h"
 #include "brave/components/brave_federated_learning/brave_operational_profiling_features.h"
 #include "brave/components/brave_stats/browser/brave_stats_updater_util.h"
+#include "brave/components/p3a/pref_names.h"
+#include "components/prefs/pref_change_registrar.h"
 #include "components/prefs/pref_registry_simple.h"
 #include "components/prefs/pref_service.h"
 #include "services/network/public/cpp/shared_url_loader_factory.h"
@@ -78,6 +80,7 @@ void BraveOperationalProfiling::Start() {
   DCHECK(!collection_slot_periodic_timer_);
 
   LoadPrefs();
+  InitPrefChangeRegistrar();
   MaybeResetCollectionId();
 
   simulate_local_training_step_timer_ =
@@ -99,8 +102,20 @@ void BraveOperationalProfiling::Start() {
       this, &BraveOperationalProfiling::OnCollectionSlotStartTimerFired);
 }
 
+void BraveOperationalProfiling::Stop() {
+  simulate_local_training_step_timer_.reset();
+  collection_slot_periodic_timer_.reset();
+}
+
+void BraveOperationalProfiling::InitPrefChangeRegistrar() {
+  local_state_change_registrar_.Init(local_state_);
+  local_state_change_registrar_.Add(
+      brave::kP3AEnabled,
+      base::BindRepeating(&BraveOperationalProfiling::OnPreferenceChanged,
+                          base::Unretained(this)));
+}
+
 void BraveOperationalProfiling::LoadPrefs() {
-  platform_ = brave_stats::GetPlatformIdentifier();
   last_checked_slot_ = local_state_->GetInteger(kLastCheckedSlotPrefName);
   collection_id_ = local_state_->GetString(kCollectionIdPrefName);
   collection_id_expiration_time_ =
@@ -112,6 +127,15 @@ void BraveOperationalProfiling::SavePrefs() {
   local_state_->SetString(kCollectionIdPrefName, collection_id_);
   local_state_->SetTime(kCollectionIdExpirationPrefName,
                         collection_id_expiration_time_);
+}
+
+void BraveOperationalProfiling::OnPreferenceChanged(const std::string& key) {
+  bool p3a_enabled = local_state_->GetBoolean(brave::kP3AEnabled);
+  bool is_operational_profiling_enabled =
+      operational_profiling::features::IsOperationalProfilingEnabled();
+  if (!p3a_enabled || !is_operational_profiling_enabled) {
+    Stop();
+  }
 }
 
 void BraveOperationalProfiling::OnCollectionSlotStartTimerFired() {
@@ -162,7 +186,7 @@ std::string BraveOperationalProfiling::BuildPayload() const {
   base::Value root(base::Value::Type::DICTIONARY);
 
   root.SetKey("collection_id", base::Value(collection_id_));
-  root.SetKey("platform", base::Value(platform_));
+  root.SetKey("platform", base::Value(brave_stats::GetPlatformIdentifier()));
   root.SetKey("collection_slot", base::Value(current_collected_slot_));
 
   std::string result;

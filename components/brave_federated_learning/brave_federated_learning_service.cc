@@ -40,7 +40,7 @@ bool BraveFederatedLearningService::isOperationalProfilingEnabled() {
 }
 
 bool BraveFederatedLearningService::isAdsEnabled() {
-  //TODO(lminto): is pegging to ads necessary?
+  // TODO(lminto): is pegging to ads necessary?
   return true;
 }
 

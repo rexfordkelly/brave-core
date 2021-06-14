@@ -11,6 +11,7 @@
 
 #include "base/time/time.h"
 #include "base/timer/timer.h"
+#include "components/prefs/pref_change_registrar.h"
 
 class PrefRegistrySimple;
 class PrefService;
@@ -41,16 +42,19 @@ class BraveOperationalProfiling final {
   static void RegisterLocalStatePrefs(PrefRegistrySimple* registry);
 
   void Start();
+  void Stop();
 
  private:
   void OnCollectionSlotStartTimerFired();
   void OnSimulateLocalTrainingStepTimerFired();
   void OnUploadComplete(scoped_refptr<net::HttpResponseHeaders> headers);
+  void OnPreferenceChanged(const std::string& key);
 
   void SendCollectionSlot();
 
   void SavePrefs();
   void LoadPrefs();
+  void InitPrefChangeRegistrar();
 
   std::string BuildPayload() const;
   int GetCurrentCollectionSlot() const;
@@ -58,6 +62,7 @@ class BraveOperationalProfiling final {
   void MaybeResetCollectionId();
 
   PrefService* local_state_;
+  PrefChangeRegistrar local_state_change_registrar_;
   std::unique_ptr<base::RepeatingTimer> collection_slot_periodic_timer_;
   std::unique_ptr<base::RetainingOneShotTimer>
       simulate_local_training_step_timer_;
@@ -68,7 +73,6 @@ class BraveOperationalProfiling final {
   int current_collected_slot_ = 0;
   int last_checked_slot_ = 0;
   std::string collection_id_;
-  std::string platform_;
 };
 
 }  // namespace brave
